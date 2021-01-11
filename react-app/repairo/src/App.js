@@ -9,6 +9,8 @@ import AddClient from "../src/components/client/AddClient";
 import LogIn from "../src/components/LogIn.component";
 import Home from "./components/Home";
 import Services from "./components/Services";
+import UpdateClient from "./components/client/UpdateClient";
+
 
 
 class App extends Component {
@@ -52,6 +54,12 @@ class App extends Component {
                 Log in
               </Link>
             </li>
+            <li className="nav-item">
+                   <Link to={"/update"} className="nav-link">
+                Update 
+              </Link>
+            </li>
+           
             </div>
         </nav>
 
@@ -65,7 +73,8 @@ class App extends Component {
             <Route path="/log_in" component={LogIn}/>
             <Route path="/home" component={Home}/>
             <Route path= "/services" component={Services}/>
-            
+            <Route path="/update" component={UpdateClient}/>
+
 
           </Switch>
           

@@ -17,6 +17,7 @@ class ListRepairOrders extends Component {
         this.refreshList = this.refreshList.bind(this);
         this.setActiveRepairs = this.setActiveRepairs.bind(this);
         this.removeAllRepairOrders = this.removeAllRepairOrders.bind(this);
+        this.update = this.update.bind(this);
 
         this.state = {
             repair_orders: [],
@@ -28,7 +29,10 @@ class ListRepairOrders extends Component {
     componentDidMount() {
         this.retrieveRepairOrders();
     }
-
+// TODO: implement update method in order to work !!!!!!!!!
+    update() {
+      alert("hello");
+    }
     retrieveRepairOrders() {
         ApiService.getAll()
           .then(response => {
@@ -106,7 +110,9 @@ class ListRepairOrders extends Component {
                     <label>
                       <strong>Client:</strong>
                     </label>{" "}
-                    {currentRepair.client}
+                    {currentRepair.client.clientFirstName} {}
+                    {currentRepair.client.clientLastName} {}
+                    {currentRepair.client.clientPhoneNumber} 
                   </div>
                   <div>
                     <label>
@@ -122,8 +128,9 @@ class ListRepairOrders extends Component {
                   </div>
     
                   <Link
-                    to={"/repair_order/" + currentRepair.id}
+                    to={"/repair_order/update" + currentRepair.id}
                     className="badge badge-warning"
+                    onClick= {this.update}
                   >
                     Edit
                   </Link>

@@ -15,7 +15,11 @@ class RepairOrder extends Component {
         this.state = {
             currentRepair : {
                 id: null,
-                client: [],
+                client: {
+                  clientFirstName: "",
+                  clientLastName: "",
+                  clientPhoneNumber: "",
+                },
                 device_specs: "",
                 repair_status: "",
                 published: false
@@ -35,7 +39,9 @@ class RepairOrder extends Component {
           return {
             currentRepair: {
               ...prevState.currentRepair,
-              client: client
+              clientFirstName: clientFirstName,
+              clientLastName: clientLastName,
+              clientPhoneNumber: clientPhoneNumber
             }
           };
         });

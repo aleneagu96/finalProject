@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import ClientService from "../../service/ClientService";
-
+import UpdateClient from './UpdateClient';
+// import UpdateClient from './UpdateClient';
 
 class ListClient extends Component {
 
@@ -17,7 +18,13 @@ class ListClient extends Component {
             clients: [],
             currentClient: null,
             currentIndex: -1,
-            id: null
+            id: null,
+            client: {
+              clientId: null,
+              clientFirstName: "",
+              clientLastName: "",
+              clientPhoneNumber: ""
+            }
         };
     }
 
@@ -25,28 +32,21 @@ class ListClient extends Component {
         this.retrieveClients();
     }
 
-    removeClient(id) {
-      ClientService.delete(id)
-        .then(response => {
-          this.setState({message: "User deleted successfully"});
-          this.setState({client: this.state.filter(client => client.id !== id)})
-        })
-        .catch(e => {
-          console.log(e);
-        })
-      }
+// TODO: REPAIR UPDATE METHOD !!!
 
-      updateClient(id) {
-        ClientService.update(id)
-          .then(response => {
-            console.log(response.data);
-            this.refreshList();
-          })
-          .catch(e => {
-            console.log(e);
-          })
+      updateClient(client) {
+         this.setState(UpdateClient.updateClient(client))
+        
+        // window.localStorage.setItem("clientId", id);
+        //  ClientService.update(id)
+        //   .then(response => {
+        //      console.log(response.data);
+        //       this.refreshList();
+        //   }).catch(e => { console.log(e)
+        // })
+        // alert(JSON.stringify(data));
+        // this.props.history.push(`/update/${id}`);
         }
-
 
     retrieveClients() {
         ClientService.getAll()
@@ -87,39 +87,56 @@ class ListClient extends Component {
           });
       }
 
+      removeClient(id) {
+        ClientService.delete(id)
+          .then(response => {
+             console.log(response.data);
+              this.refreshList();
+          }).catch(e => { console.log(e)
+        })
+      }
+
       render() {
-        const { clients, currentClient, currentIndex } = this.state;
+        const { clients, currentClient, currentIndex} = this.state;
     
         return (
           <div className="list row">
+
                 <div className="col-md-6">
                     <h4>Clients</h4>
-    
                          <ul className="list-group">
-                             {clients &&
-                             clients.map((client, index) => (
+                             {clients && clients.map((client, index) => 
+                (
                     <li className={ "list-group-item " +
-                        (index === currentIndex ? "active" : "")
-                      }
+                        (index === currentIndex ? "active" : "")}
                       onClick={() => this.setActiveClients(client, index)}
-                      key={index}
-                    >
+                      key={index}>
                       {client.clientFirstName} {client.clientLastName}
                     </li>
-                  ))}
+                )
+                  )}
               </ul>
     
               <button
-                className="m-3 btn btn-sm btn-danger"
-                onClick={this.removeAllClients}
-              >
+                className=" btn btn-sm btn-danger"
+                onClick={() => this.removeAllClients()}>
                 Remove All
               </button>
+
+
             </div>
+
+
             <div className="col-md-6">
               {currentClient ? (
                 <div>
-                  <h4>Client</h4>
+                  <h4>Client information:</h4>
+                  <div>
+                    <label>
+                      <strong>Client id:</strong>
+                    </label>{" "}
+                    {currentClient.clientId}
+                  </div>
                   <div>
                     <label>
                       <strong>First name:</strong>
@@ -138,19 +155,18 @@ class ListClient extends Component {
                     </label>{" "}
                     {currentClient.clientPhoneNumber}
                   </div>
-                  <button
-                className="m-3 btn btn-sm btn-danger"
-                onClick={this.removeClient} >
+              
+                  <button className="btn btn-danger"
+                onClick={ () => this.removeClient(currentClient.clientId)} >
                   
                 Delete
               </button>
-
-              <button
-                className="m-3 btn btn-sm btn-danger"
-                onClick={this.updateClient}
-              >
+                
+              <button className="btn btn-success" 
+              onClick={ () => this.props.updateClient(currentClient.clientId)}>
                 Edit
               </button> 
+              
                
                 </div>
               ) : (

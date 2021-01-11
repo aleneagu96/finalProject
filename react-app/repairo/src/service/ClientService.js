@@ -14,11 +14,11 @@ class ClientService {
       }
     
       update(id, data) {
-        return http.put(`/clients/update${id}`, data);
+        return http.put(`/clients/update/${id}`, data);
       }
     
       delete(id) {
-        return http.delete(`/clients/delete${id}`);
+        return http.delete(`/clients/delete/${id}` );
       }
     
       deleteAll() {

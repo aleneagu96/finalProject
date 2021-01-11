@@ -41,7 +41,7 @@ class AddRepairOrder extends Component{
 
     saveRepairOrder() {
         var data = {
-            client: this.state.client,
+            client: this.state.client, // here should go the whole obj of client, that's why there's a 400 error
             device_specs: this.state.device_specs,
             repair_status: this.state.repair_status
         };
@@ -89,16 +89,39 @@ class AddRepairOrder extends Component{
         ) : (
           <div>
             <div className="form-group">
-              <label htmlFor="client">Client</label>
+              <label htmlFor="clientFirstName">Client's first name</label>
               <input
                 type="text"
                 className="form-control"
-                id="client"
-                required value={this.state.client}
+                id="clientFirstName"
+                required value={this.state.client.clientFirstName}
                 onChange={this.onChangeClient}
-                name="client"
+                name="clientFirstName"
               />
             </div>
+            <div className="form-group">
+              <label htmlFor="clientLastName">Client's last name</label>
+              <input
+                type="text"
+                className="form-control"
+                id="clientLastName"
+                required value={this.state.client.clientLastName}
+                onChange={this.onChangeClient}
+                name="clientLastName"
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="clientPhoneNumber">Client's phone number</label>
+              <input
+                type="text"
+                className="form-control"
+                id="clientPhoneNumber"
+                required value={this.state.client.clientPhoneNumber}
+                onChange={this.onChangeClient}
+                name="clientPhoneNumber"
+              />
+            </div>
+            
 
             <div className="form-group">
               <label htmlFor="device_specs">Device specifications</label>
@@ -112,7 +135,8 @@ class AddRepairOrder extends Component{
                 name="device_specs"
               />
             </div>
-
+            
+            
             <div className="form-group">
               <label htmlFor="repair_status">Repair status</label>
               <input

@@ -1,31 +1,29 @@
-//import axios from 'axios';
 import http from "../HttpCommon";
 
-// const APIUrl = "http://localhost:8090//api/repair_order";
 
 class ApiService {
     getAll() {
-        return http.get("/");
+        return http.get("/repair_order");
       }
     
       get(id) {
-        return http.get(`/${id}`);
+        return http.get(`repair_order/${id}`);
       }
     
       create(data) {
-        return http.post("/", data);
+        return http.post("/repair_order/newRepairOrder", data);
       }
     
       update(id, data) {
-        return http.put(`/${id}`, data);
+        return http.put(`/repair_order/update` +id , data);
       }
     
       delete(id) {
-        return http.delete(`/${id}`);
+        return http.delete(`/repair_order/delete/${id}`);
       }
     
       deleteAll() {
-        return http.delete(`/`);
+        return http.delete(`/repair_order/delteAll`);
       }
     
 
