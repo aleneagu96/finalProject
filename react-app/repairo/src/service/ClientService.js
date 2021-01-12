@@ -13,8 +13,8 @@ class ClientService {
         return http.post("/clients/newClient", data);
       }
     
-      update(id, data) {
-        return http.put(`/clients/update/${id}`, data);
+      update(id) {
+        return http.put(`/clients/update/${id}`);
       }
     
       delete(id) {

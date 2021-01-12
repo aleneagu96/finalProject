@@ -1,132 +1,95 @@
-import React, { Component } from 'react'
-
-import ClientService from '../../service/ClientService';
+import React, {Component} from 'react';
+import {Link, withRouter} from 'react-router-dom';
+import {Button, Container, Form, FormGroup, Input, Label} from 'reactstrap';
 
 class UpdateClient extends Component {
+    emptyItem = {
+        clientId: '',
+        clientFirstName: '',
+        clientLastName: '',
+        clientPhoneNumber: null
+    };
 
-    constructor(props){
+    constructor(props) {
         super(props);
 
-        this.state ={
-            clientId: this.props.match.params.id,
-            clientFirstName: '',
-            clientLastName: '',
-            clientPhoneNumber: '',
+        this.state = {
+            item: this.emptyItem
+        };
+
+        this.handleChange = this.handleChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+    async componentDidMount() {
+        if( this.props.match.params.clientId !== 'new') {
+            const client = await(await fetch(`/api/clients/${this.props.match.params.clientId}`)).text();
+            this.setState({item: client});
         }
-        this.changeFirstNameHandler= this.changeFirstNameHandler.bind(this);
-        this.changeLastNameHandler=this.changeLastNameHandler.bind(this);
-        this.changePhoneNumberHandler= this.changePhoneNumberHandler.bind(this);
-        this.updateClient= this.updateClient.bind(this);
-        this.saveClient = this.saveClient.bind(this);
-        this.loadClient = this.loadClient.bind(this);
     }
 
-    componentDidMount() {
-        this.loadClient();
+    handleChange(event) {
+        const targe = event.target;
+        const value = targe.value;
+        const name = targe.name;
+        let item ={...this.state.item};
+        item[name] = value;
+        this.setState({item});
     }
 
-    loadClient(clientId) {
-        ClientService.get(clientId)
-            .then((res) => {
-                let client = res.data.result;
-                this.setState({
-                clientId: client.clientId,
-                clientFirstName: client.clientFirstName,
-                clientLastName: client.clientLastName,
-                clientPhoneNumber: client.clientPhoneNumber,
-                })
-            });
-    }
+    async handleSubmit(event) {
+        event.preventDefault();
+        const {item} = this.state;
 
-    onChange = (e) =>
-        this.setState({ [e.target.clientFirstName]: e.target.value });
+        await fetch('http://localhost:8090/api/clients/update/' + (item.clientId ? '/' + item.clientId : ''), {
+            method: (item.clientId) ? 'PUT' : 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type' : 'application/json'
+            },
 
-    saveClient = (e) => {
-        e.preventDefault();
-        let client = {clientId: this.state.clientId, clientFirstName: this.state.clientFirstName, clientLastName: this.state.clientLastName, clientPhoneNumber: this.state.clientPhoneNumber};
-        ClientService.update(client)
-            .then(res => {
-                this.setState({message : 'Client updated successfully.'});
-                this.props.history.push('/clients/update');
-            });
-    }
-
-   updateClient = (e) => {
-       e.preventDefault();
-       let client = {clientId: this.state.clientId,
-           clientFirstName: this.state.clientFirstName,
-                        clientLastName: this.state.clientLastName,
-                        clientPhoneNumber: this.state.clientPhoneNumber,
-};
-
-        console.log('client => ' + JSON.stringify(client));
-        console.log('id =>' + JSON.stringify(this.state.clientId));
-        ClientService.update(client, this.state.clientId).then( res => {
-            this.props.history.push('/clients');
+            body: JSON.stringify(item),
         });
-   }
-
-   changeFirstNameHandler= (event) => {
-       this.setState({clientFirstName: event.target.value});
-   }
-
-   changeLastNameHandler= (event) => {
-       this.setState({clientLastName: event.target.value});
-   }
-
-   changePhoneNumberHandler= (event) => {
-       this.setState({clientPhoneNumber: event.target.value});
-   }
-
-  
-
-   cancel(){
-       this.props.history.push('/clients');
-   }
+            this.props.history.push('/clients');
+    }
 
     render() {
-        return (
-            <div>
-            <br></br>
-               <div className = "container">
-                    <div className = "row">
-                        <div className = "card col-md-6 offset-md-3 offset-md-3">
-                            <h3 className="text-center">Update Client </h3>
-                            <div className = "card-body">
-                                <form>
-                                    <div className = "form-group">
-                                        <label> Client's first name: </label>
-                                        <input placeholder="First Name" name="clientFirstName" className="form-control" 
-                                            value={this.state.clientFirstName} onChange={this.changeFirstNameHandler}/>
-                                    </div>
-                                    <div className = "form-group">
-                                        <label> Client's last Name: </label>
-                                        <input placeholder="Last Name" name="clientLastName" className="form-control" 
-                                            value={this.state.clientLastName} onChange={this.changeLastNameHandler}/>
-                                    </div>
-                                    <div className = "form-group">
-                                        <label> Client's phone number </label>
-                                        <input placeholder="Phone number" name="clientPhoneNumber" className="form-control" 
-                                            value={this.state.clientPhoneNumber} onChange={this.changePhoneNumberHandler}/>
-                                    </div>
-                                
+        const {item} = this.state;
+        const title = <h2>{item.clientId ? 'Edit' : 'Add'}</h2>
 
-                                    {/* <button className="btn btn-success" onClick={this.updateClient}>Save</button> */}
-                                    <button className="btn btn-danger" onClick={this.cancel.bind(this)} style={{marginLeft: "10px"}}>Cancel</button>
-                                    <button className="btn btn-success" onClick={this.saveClient}>Save</button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-
-               </div>
+        return <div>
+            <Container>
+                {title}
+                <Form onSubmit={this.handleSubmit}>
+                <FormGroup>
+                        <Label for="clientId">Client id</Label>
+                        <Input type ="text"  name ="clientId" id="clientId" value={item.clientId || ''}
+                        onChange={this.handleChange} autoComplete="clientId"/>
+                    </FormGroup>
+                    <FormGroup>
+                        <Label for="clientFirstName">First Name</Label>
+                        <Input type ="text"  name ="clientFirstName" id="clientFirstName" value={item.clientFirstName || ''}
+                        onChange={this.handleChange} autoComplete="clientFirstName"/>
+                    </FormGroup>
+                    <FormGroup>
+                        <Label for="clientLastName">Last Name</Label>
+                        <Input type="text" name="clientLastName" id="clientLastName" value={item.clientLastName || ''}
+                        onChange={this.handleChange} autoComplete="clientLastName"/>
+                    </FormGroup>
+                    <FormGroup>
+                        <Label for="clientPhoneNumber">Phone Number</Label>
+                        <Input type="text" name="clientPhoneNumber" id="clientPhoneNumber" value={item.clientPhoneNumber || ''}
+                        onChange={this.handleChange} autoComplete="clientPhoneNumber"/>
+                    </FormGroup>
+                    <FormGroup>
+                    <Button color="primary" type="submit">Save</Button>{' '}
+                    <Button color="secondary" type={Link} to="/clients">Cancel</Button>
+                    </FormGroup>
+                    
+                </Form>
+            </Container>
         </div>
-    );
     }
 }
 
-export default UpdateClient 
-
-    
-
-   
+export default withRouter(UpdateClient);

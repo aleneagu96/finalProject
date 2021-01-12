@@ -54,8 +54,8 @@ class App extends Component {
                 Log in
               </Link>
             </li>
-            <li className="nav-item">
-                   <Link to={"/update"} className="nav-link">
+            <li className="nav-item" >
+                   <Link to={`update/`} className="nav-link">
                 Update 
               </Link>
             </li>
@@ -73,7 +73,7 @@ class App extends Component {
             <Route path="/log_in" component={LogIn}/>
             <Route path="/home" component={Home}/>
             <Route path= "/services" component={Services}/>
-            <Route path="/update" component={UpdateClient}/>
+            <Route path="/update/" component={UpdateClient}/>
 
 
           </Switch>
