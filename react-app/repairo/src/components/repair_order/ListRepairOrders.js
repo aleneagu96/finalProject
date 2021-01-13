@@ -6,17 +6,13 @@ class ListRepairOrders extends Component {
 
     constructor(props) {
         super(props);
-        //  let client = {
-        //   clientId: "",
-        //   clientFirstName: "",
-        //   clientLastName: "",
-        //   clientPhoneNumber: ""
-        // }
+  
+       
 
         this.retrieveRepairOrders = this.retrieveRepairOrders.bind(this);
         this.refreshList = this.refreshList.bind(this);
         this.setActiveRepairs = this.setActiveRepairs.bind(this);
-        this.removeAllRepairOrders = this.removeAllRepairOrders.bind(this);
+        this.removeRepairOrder = this.removeRepairOrder.bind(this);
         this.update = this.update.bind(this);
 
         this.state = {
@@ -61,15 +57,13 @@ class ListRepairOrders extends Component {
         });
       }
     
-      removeAllRepairOrders() {
-        ApiService.deleteAll()
+      removeRepairOrder(id) {
+        ApiService.delete(id)
           .then(response => {
-            console.log(response.data);
-            this.refreshList();
-          })
-          .catch(e => {
-            console.log(e);
-          });
+             console.log(response.data);
+              this.refreshList();
+          }).catch(e => { console.log(e)
+        })
       }
 
       render() {
@@ -95,12 +89,7 @@ class ListRepairOrders extends Component {
                   ))}
               </ul>
     
-              <button
-                className="m-3 btn btn-sm btn-danger"
-                onClick={this.removeAllRepairOrders}
-              >
-                Remove All
-              </button>
+              
             </div>
             <div className="col-md-6">
               {currentRepair ? (
@@ -112,7 +101,7 @@ class ListRepairOrders extends Component {
                     </label>{" "}
                     {currentRepair.client.clientFirstName} {}
                     {currentRepair.client.clientLastName} {}
-                    {currentRepair.client.clientPhoneNumber} 
+                    {currentRepair.client.clientPhoneNumber} {}
                   </div>
                   <div>
                     <label>
@@ -124,16 +113,15 @@ class ListRepairOrders extends Component {
                     <label>
                       <strong>Repair status:</strong>
                     </label>{" "}
-                    {currentRepair.repairStatus ? "Published" : "Pending"}
+                    {currentRepair.repairStatus}
                   </div>
+                  <button className="btn btn-danger"
+                onClick={ () => this.removeRepairOrder(currentRepair.repairOrderId)} >
+                  
+                Delete
+              </button>
     
-                  <Link
-                    to={"/repair_order/update" + currentRepair.id}
-                    className="badge badge-warning"
-                    onClick= {this.update}
-                  >
-                    Edit
-                  </Link>
+                  <Link to="/update" className="btn btn-primary">Update</Link>
                 </div>
               ) : (
                 <div>

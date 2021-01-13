@@ -2,6 +2,7 @@ package com.project.repairo.model;
 
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity(name="client")
 @Table(name="client")
@@ -9,7 +10,7 @@ public class Client {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int clientId;
+    private Integer clientId;
 
     @Column
     private String clientFirstName;
@@ -20,14 +21,18 @@ public class Client {
     @Column
     private int clientPhoneNumber;
 
+    @OneToMany
+    private Set<RepairOrder> repairOrder;
+
+
     public Client() {
     }
 
-    public int getClientId() {
+    public Integer getClientId() {
         return clientId;
     }
 
-    public void setClientId(int clientId) {
+    public void setClientId(Integer clientId) {
         this.clientId = clientId;
     }
 

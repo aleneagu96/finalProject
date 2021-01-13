@@ -1,11 +1,6 @@
 import React, { Component } from 'react'
 import ClientService from "../../service/ClientService";
-// import UpdateClient from './UpdateClient';
-// import {Button, Container, Form, FormGroup, Input, Label} from 'reactstrap';
-// import {Link, withRouter} from 'react-router-dom';
-
-
-
+import {Link} from 'react-router-dom';
 
 class ListClient extends Component {
 
@@ -16,7 +11,7 @@ class ListClient extends Component {
         this.setActiveClients = this.setActiveClients.bind(this);
         this.removeAllClients = this.removeAllClients.bind(this);
         this.removeClient = this.removeClient.bind(this);
-        // this.updateClient = this.updateClient.bind(this);
+        
 
         this.state = {
             clients: [],
@@ -35,25 +30,6 @@ class ListClient extends Component {
     componentDidMount() {
         this.retrieveClients();
     }
-
-// TODO: REPAIR UPDATE METHOD !!!
-
-      //  updateClient(client) {
-
-      //   alert("THIS NEEDS TO BE LINKED TO THE UPDATE CLIENT COMPONENT IN ORDER TO WORK")
-        // UpdateClient.handleChange(client);
-      //    this.setState(UpdateClient.updateClient(client))
-        
-        // window.localStorage.setItem("clientId", id);
-        //  ClientService.update(id)
-        //   .then(response => {
-        //      console.log(response.data);
-        //       this.refreshList();
-        //   }).catch(e => { console.log(e)
-        // })
-        // alert(JSON.stringify(data));
-        // this.props.history.push(`/update/${id}`);
-        // }
 
     retrieveClients() {
         ClientService.getAll()
@@ -168,12 +144,8 @@ class ListClient extends Component {
                   
                 Delete
               </button>
-                
-              {/* <Button color="secondary" type={Link} to="/clients/update">Update</Button>
-              {/* <button className="btn btn-success" 
-              onClick={ () => this.updateClient(currentClient)}>
-                Edit
-              </button>  */} 
+              <Link to="/update" className="btn btn-primary">Update</Link>
+              
               
                
                 </div>

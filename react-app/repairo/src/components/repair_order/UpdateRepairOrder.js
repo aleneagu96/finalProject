@@ -1,125 +1,109 @@
-import React, { Component } from 'react'
-import ApiService from "../../service/ApiService";
+import React, {Component} from 'react';
+import {Link, withRouter} from 'react-router-dom';
+import {Button, Container, Form, FormGroup, Input, Label} from 'reactstrap';
 
 class UpdateRepairOrder extends Component {
+    emptyItem = {
+        repairOrderId: '',
+        deviceSpecs: '',
+        repairStatus: '',
+        client: { clientId: "", clientFirstName: "", clientLastName: "", clientPhoneNumber: "" }
+    };
 
-    constructor(props){
+    constructor(props) {
         super(props);
 
-        this.state ={
-            id: this.props.match.params.id,
-            first_name: '',
-            last_name: '',
-            phone_number: '',
-            device_specs: '',
-            repair_status: '',
+        this.state = {
+            item: this.emptyItem
+        };
+
+        this.handleChange = this.handleChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+    async componentDidMount() {
+        if( this.props.match.params.repairOrderId !== 'new') {
+            const repairOrder = await(await fetch(`/api/repair_order/${this.props.match.params.repairOrderId}`)).text();
+            this.setState({item: repairOrder});
         }
-        this.changeFirstNameHandler= this.changeFirstNameHandler.bind(this);
-        this.changeLastNameHandler=this.changeLastNameHandler.bind(this);
-        this.changePhoneNumberHandler= this.changePhoneNumberHandler.bind(this);
-        this.changeDeviceSpecsHandler= this.changeDeviceSpecsHandler.bind(this);
-        this.changeRepairStatusHandler=this.changeRepairStatusHandler.bind(this);
-        this.updateRepairOrder= this.updateRepairOrder.bind(this);
     }
 
-    componentDidMount() {
-        ApiService.getRepairOrderById(this.state.id).then( (res) =>{
-            let repair_order = res.data;
-            this.setState({first_name: repair_order.first_name,
-                        last_name: repair_order.last_name,
-                        phone_number: repair_order.phone_number,
-                        device_specs:repair_order.device_specs,
-                        repair_status: repair_order.repair_status
-                    });
-        });
+    handleChange(event) {
+        const target = event.target;
+        const value = target.value;
+        const name = target.name;
+        let item ={...this.state.item};
+        item[name] = value;
+        this.setState({item});
     }
 
-   updateRepairOrder = (e) => {
-       e.preventDefault();
-       let repair_order = {first_name: this.state.first_name,
-                        last_name: this.state.last_name,
-                        phone_number: this.state.phone_number,
-                        device_specs:this.state.device_specs,
-                        repair_status: this.state.repair_status};
+    async handleSubmit(event) {
+        event.preventDefault();
+        const {item} = this.state;
 
-        console.log('repair_order => ' + JSON.stringify(repair_order));
-        console.log('id =>' + JSON.stringify(this.state.id));
-        ApiService.updateRepairOrder(repair_order, this.state.id).then( res => {
-            this.props.history.push('/repair_orders');
+        await fetch('http://localhost:8090/api/repair_order/update/' + (item.repairOrderId ? '/' + item.repairOrderId : ''), {
+            method: (item.repairOrderId) ? 'PUT' : 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type' : 'application/json'
+            },
+
+            body: JSON.stringify(item),
         });
-   }
-
-   changeFirstNameHandler= (event) => {
-       this.setState({first_name: event.target.value});
-   }
-
-   changeLastNameHandler= (event) => {
-       this.setState({last_name: event.target.value});
-   }
-
-   changePhoneNumberHandler= (event) => {
-       this.setState({phone_number: event.target.value});
-   }
-
-   changeDeviceSpecsHandler= (event) => {
-       this.setState({device_specs: event.target.value});
-   }
-
-   changeRepairStatusHandler= (event) => {
-       this.setState({repair_status: event.target.value});
-   }
-
-   cancel(){
-       this.props.history.push('/repair-orders');
-   }
+            this.props.history.push('/repair_order');
+    }
 
     render() {
-        return (
-            <div>
-            <br></br>
-               <div className = "container">
-                    <div className = "row">
-                        <div className = "card col-md-6 offset-md-3 offset-md-3">
-                            <h3 className="text-center">Update Repair Order</h3>
-                            <div className = "card-body">
-                                <form>
-                                    <div className = "form-group">
-                                        <label> Client's first name: </label>
-                                        <input placeholder="First Name" name="firstName" className="form-control" 
-                                            value={this.state.first_name} onChange={this.changeFirstNameHandler}/>
-                                    </div>
-                                    <div className = "form-group">
-                                        <label> Client's last Name: </label>
-                                        <input placeholder="Last Name" name="lastName" className="form-control" 
-                                            value={this.state.last_name} onChange={this.changeLastNameHandler}/>
-                                    </div>
-                                    <div className = "form-group">
-                                        <label> Client's phone number </label>
-                                        <input placeholder="Phone number" name="phoneNumber" className="form-control" 
-                                            value={this.state.phone_number} onChange={this.changePhoneNumberHandler}/>
-                                    </div>
-                                    <div className = "form-group">
-                                        <label> Client's device specifications </label>
-                                        <input placeholder="Device specs" name="deviceSpecs" className="form-control" 
-                                            value={this.state.device_specs} onChange={this.changeDeviceSpecsHandler}/>
-                                    </div>
-                                    <div className = "form-group">
-                                        <label> Repair status </label>
-                                        <input placeholder="Repair status" name="repairStatus" className="form-control" 
-                                            value={this.state.repair_status} onChange={this.changeRepairStatusHandler}/>
-                                    </div>
+        const {item} = this.state;
+        const {clients} = this.state;
+        const title = <h2>{item.repairOrderId ? 'Edit' : 'Add'}</h2>
+        let optionList = clients.map((client) => (
+            <option value={JSON.stringify(client)} id={client.clientId}>
+              {" "}
+              {client.clientFirstName}{" "}
+              {client.clientLastName}{" "}
+              {client.clientPhoneNumber}{" "}
+            </option>
+          ));
 
-                                    <button className="btn btn-success" onClick={this.updateRepairOrder}>Save</button>
-                                    <button className="btn btn-danger" onClick={this.cancel.bind(this)} style={{marginLeft: "10px"}}>Cancel</button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-
-               </div>
+        return <div>
+            <Container>
+                {title}
+                <Form onSubmit={this.handleSubmit}>
+                <FormGroup>
+                        <Label for="repairOrderId">Repair order id</Label>
+                        <Input type ="text"  name ="repairOrderId" id="repairOrderId" value={item.repairOrderId || ''}
+                        onChange={this.handleChange} autoComplete="repairOrderId"/>
+                    </FormGroup>
+                    <FormGroup>
+                        <Label for="deviceSpecs">Device Specifications</Label>
+                        <Input type ="text"  name ="deviceSpecs" id="deviceSpecs" value={item.deviceSpecs || ''}
+                        onChange={this.handleChange} autoComplete="deviceSpecs"/>
+                    </FormGroup>
+                    <FormGroup>
+                        <Label for="repairStatus">Repair Status</Label>
+                        <Input type="text" name="repairStatus" id="repairStatus" value={item.repairStatus || ''}
+                        onChange={this.handleChange} autoComplete="repairStatus"/>
+                    </FormGroup>
+                    <FormGroup>
+                    <Label for="client">Client</Label>
+                        <select name="client" id="clientId" value={JSON.stringify(item.client || '')}
+                    onChange={this.handleChange}>
+                    {optionList}
+                         </select>
+                        {/* <Label for="client">Client</Label>
+                        <Input type="text" name="clientPhoneNumber" id="clientPhoneNumber" value={item.clientPhoneNumber || ''}
+                        onChange={this.handleChange} autoComplete="clientPhoneNumber"/> */}
+                    </FormGroup>
+                    <FormGroup>
+                    <Button color="primary" type="submit">Save</Button>{' '}
+                    <Button color="secondary" type={Link} to="/repair_order">Cancel</Button>
+                    </FormGroup>
+                    
+                </Form>
+            </Container>
         </div>
-    );
     }
 }
 
-export default UpdateRepairOrder 
+export default withRouter(UpdateRepairOrder);

@@ -1,2 +1,8 @@
-package com.project.repairo.exceptions;public class ClientNotFoundException {
+package com.project.repairo.exceptions;
+
+public class ClientNotFoundException extends RuntimeException {
+
+    public ClientNotFoundException(String message) {
+        super(message);
+    }
 }

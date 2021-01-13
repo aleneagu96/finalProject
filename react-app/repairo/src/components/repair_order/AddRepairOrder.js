@@ -1,313 +1,161 @@
-import React, { Component } from 'react'
-import ApiService from "../../service/ApiService";
+import React, { Component } from "react";
+import { Container, Button, Form, Input, Label, FormGroup } from "reactstrap";
 
-class AddRepairOrder extends Component{
 
-    constructor(props){
-        super(props);
-        this.onChangeClient= this.onChangeClient.bind(this);
-        this.onChangeDeviceSpecs = this.onChangeDeviceSpecs.bind(this);
-        this.onChangeRepairStatus= this.onChangeRepairStatus.bind(this);
-        this.saveRepairOrder= this.saveRepairOrder.bind(this);
-        this.newRepairOrder= this.newRepairOrder.bind(this);
-
-        this.state = {
-            id: null,
-            client: [],
-            device_specs: "",
-            repair_status: "",
-            published: false,
-            submitted: false
-        };
+class AddRepairOrder extends Component {
+  state = {
+    value: {
+      id: "",
+      deviceSpecs: "",
+      repairStatus: "",
+      client: { clientId: "1", clientFirstName: "Ale", clientLastName: "Neagu", clientPhoneNumber: "074054221" },
+    },
+  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      isLoading: true,
+      clients: [],
+      repairOrders: [],
+      client: this.emptyClient,
+    };
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+    this.handleChangeClient = this.handleChangeClient.bind(this);
+  }
+  handleChange(event) {
+    const target = event.target;
+    const value = target.value;
+    const name = target.name;
+    let repairOrder = { ...this.state.repairOrder };
+    repairOrder[name] = value;
+    this.setState({ repairOrder });
+  }
+  handleChangeClient(event) {
+    const target = event.target;
+    const value = target.value;
+    const name = target.name;
+    let repairOrder = { ...this.state.repairOrder };
+    repairOrder[name] = JSON.parse(value);
+    this.setState({ repairOrder });
+  }
+  async handleSubmit(event) {
+    event.preventDefault();
+    const { repairOrder } = this.state;
+    await fetch("http://localhost:8090/api/repair_order/newRepairOrder", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(repairOrder),
+    });
+    console.log(repairOrder);
+    alert("Repair order published")
+  }
+  async componentDidMount() {
+    const responseClient = await fetch(
+      "http://localhost:8090/api/clients"
+    );
+    const bodyCategory = await responseClient.json();
+    this.setState({
+      clients: bodyCategory,
+      isLoading: false,
+    });
+    const responseRepairOrder = await fetch("http://localhost:8090/api/repair_order");
+    const bodyRecipe = await responseRepairOrder.json();
+    this.setState({
+      repairOrders: bodyRecipe,
+      isLoading: false,
+    });
+  }
+  cancel() {
+    this.props.history.push("/repair_order");
+  }
+  save() {
+    this.props.history.push("/repair_order/newRepairOrder");
+  }
+  render() {
+    const title = (
+      <h3
+        className="pt-2"
+        style={{ display: "flex", justifyContent: "center" }}
+      >
+        Add Repair Order
+      </h3>
+    );
+    const { clients, isLoading } = this.state;
+    if (isLoading) {
+      return <div>Loading...</div>;
     }
-
-    onChangeClient(e) {
-        this.setState({
-            client: e.target.value
-        });
-    }
-
-    onChangeDeviceSpecs(e) {
-        this.setState({
-            device_specs: e.target.value
-        });
-    }
-
-    onChangeRepairStatus(e) {
-        this.setState({
-            repair_status: e.target.value
-        });
-    }
-
-    saveRepairOrder() {
-        var data = {
-            client: this.state.client, // here should go the whole obj of client, that's why there's a 400 error
-            device_specs: this.state.device_specs,
-            repair_status: this.state.repair_status
-        };
-
-    ApiService.create(data)
-            .then(response => {
-                this.setState({
-                    id: response.data.id,
-                    client: response.data.client,
-                    device_specs: response.data.device_specs,
-                    repair_status: response.data.repair_status,
-                    published: response.data.published,
-
-                    submitted: true
-                });
-            console.log(response.data);
-            })
-            .catch(e => {
-                console.log(e);
-            });
-    }
-
-    newRepairOrder() {
-        this.setState({
-            id: null,
-            client: [],
-            device_specs: "",
-            repair_status: "",
-            published: false,
-
-            submitted: false
-        });
-    }
-
-    render() {
-        return (
-            <div className="submit-form">
-        {this.state.submitted ? (
-          <div>
-            <h4>You submitted successfully!</h4>
-            <button className="btn btn-success" onClick={this.newRepairOrder}>
-              Add
-            </button>
-          </div>
-        ) : (
-          <div>
-            <div className="form-group">
-              <label htmlFor="clientFirstName">Client's first name</label>
-              <input
-                type="text"
-                className="form-control"
-                id="clientFirstName"
-                required value={this.state.client.clientFirstName}
-                onChange={this.onChangeClient}
-                name="clientFirstName"
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="clientLastName">Client's last name</label>
-              <input
-                type="text"
-                className="form-control"
-                id="clientLastName"
-                required value={this.state.client.clientLastName}
-                onChange={this.onChangeClient}
-                name="clientLastName"
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="clientPhoneNumber">Client's phone number</label>
-              <input
-                type="text"
-                className="form-control"
-                id="clientPhoneNumber"
-                required value={this.state.client.clientPhoneNumber}
-                onChange={this.onChangeClient}
-                name="clientPhoneNumber"
-              />
-            </div>
-            
-
-            <div className="form-group">
-              <label htmlFor="device_specs">Device specifications</label>
-              <input
-                type="text"
-                className="form-control"
-                id="device_specs"
-                required
-                value={this.state.device_specs}
-                onChange={this.onChangeDeviceSpecs}
-                name="device_specs"
-              />
-            </div>
-            
-            
-            <div className="form-group">
-              <label htmlFor="repair_status">Repair status</label>
-              <input
-                type="text"
-                className="form-control"
-                id="repair_status"
-                required
-                value={this.state.repair_status}
-                onChange={this.onChangeRepairStatus}
-                name="repair_status"
-              />
-            </div>
-
-            <button onClick={this.saveRepairOrder} className="btn btn-success">
-              Submit
-            </button>
-          </div>
-        )}
-      </div>
-        );
-    }
-}
- export default AddRepairOrder
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//         this.state ={
-//             id: this.props.match.params.id,
-//             first_name: '',
-//             last_name: '',
-//             phone_number: '',
-//             device_specs:'',
-//             repair_status:''
-//         }
-//     this.changeFirstNameHandler = this.changeFirstNameHandler.bind(this);
-//     this.changeLastNameHandler = this.changeLastNameHandler.bind(this);
-//     this.changePhoneNumberHandler = this.changePhoneNumberHandler.bind(this);
-//     this.changeDeviceSpecsHandler = this.changeDeviceSpecsHandler.bind(this);
-//     this.changeRepairStatusHandler = this.changeRepairStatusHandler.bind(this);
-//     this.saveOrUpdateRepairOrder = this.saveOrUpdateRepairOrder.bind(this);
+    let optionList = clients.map((client) => (
+      <option value={JSON.stringify(client)} id={client.clientId}>
+        {" "}
+        {client.clientFirstName}{" "}
+        {client.clientLastName}{" "}
+        {client.clientPhoneNumber}{" "}
+      </option>
+    ));
+    return (
+      <div className="Site">
         
-// }
-//     componentDidMount() {
-//         if(this.state.id === 'newRepairOrder') {
-//             return
-//         } else {
-//             ApiService.getRepairOrderById(this.state.id).then( (res) =>{
-//                 let repair_order = res.data;
-//                 this.setState({first_name: repair_order.first_name,
-//                                 last_name: repair_order.last_name,
-//                                 phone_number: repair_order.phone_number,
-//                                 device_specs: repair_order.device_specs,
-//                                 repair_status: repair_order.repair_status
-//                             });
-//             });
-//         }
-//     }
-
-//     saveOrUpdateRepairOrder = (e) => {
-//         e.preventDefault();
-//         let repair_order = {first_name: this.state.first_name,
-//                             last_name: this.state.last_name,
-//                             phone_number: this.state.phone_number,
-//                             device_specs: this.state.device_specs,
-//                             repair_status: this.state.repair_status};
-
-//         console.log('repair_order => ' + JSON.stringify(repair_order));
-
-//         if(this.state.id === '_add'){ 
-//             ApiService.addRepairOrder(repair_order).then( res =>{
-//                 this.props.history.push('/repair_orders');
-//             });
-//         }else{
-//             ApiService.updateRepairOrder(repair_order, this.state.id).then( res => {
-//                 this.props.history.push('/repair_orders');
-//             });
-//         }
-//     }
-
-//         changeFirstNameHandler = (event) => {
-//             this.setState({first_name: event.target.value})
-//         }
-
-//         changeLastNameHandler = (event) => {
-//             this.setState({last_name: event.target.value})
-//         }
-
-//         changePhoneNumberHandler = (event) => {
-//             this.setState({phone_number: event.target.value})
-//         }
-//         changeDeviceSpecsHandler = (event) => {
-//             this.setState({device_specs: event.target.value})
-//         }
-//         changeRepairStatusHandler = (event) => {
-//             this.setState({repair_status: event.target.value})
-//         }
-
-//         cancel() {
-//             this.props.history.push('/repair_orders');
-//         }
-
-//         getTitle() {
-//             if(this.state.id === '_add'){
-//                 return <h3 className="text-center">Add Repair Order</h3>
-//             }else {
-//                 return <h3 className="text-center">Update Repair Order</h3>
-//             }
-//         }
-
-//         render(){
-//             return (
-//                 <div>
-//                 <br></br>
-//                    <div className = "container">
-//                         <div className = "row">
-//                             <div className = "card col-md-6 offset-md-3 offset-md-3">
-//                                 {
-//                                     this.getTitle()
-//                                 }
-//                                 <div className = "card-body">
-//                                     <form>
-//                                         <div className = "form-group">
-//                                             <label> Client's first name: </label>
-//                                             <input placeholder="First Name" name="firstName" className="form-control" 
-//                                                 value={this.state.first_name} onChange={this.changeFirstNameHandler}/>
-//                                         </div>
-//                                         <div className = "form-group">
-//                                             <label> Client's last name: </label>
-//                                             <input placeholder="Last Name" name="lastName" className="form-control" 
-//                                                 value={this.state.last_name} onChange={this.changeLastNameHandler}/>
-//                                         </div>
-//                                         <div className = "form-group">
-//                                             <label> Client's phone number </label>
-//                                             <input placeholder="Phone number" name="phoneNumber" className="form-control" 
-//                                                 value={this.state.phone_number} onChange={this.changePhoneNumberHandler}/>
-//                                         </div>
-//                                         <div className = "form-group">
-//                                             <label> Client's device specifications </label>
-//                                             <input placeholder="Device specifications" name="deviceSpecs" className="form-control" 
-//                                                 value={this.state.device_specs} onChange={this.changeDeviceSpecsHandler}/>
-//                                         </div>
-//                                         <div className = "form-group">
-//                                             <label> Repair Status </label>
-//                                             <input placeholder="Repair status" name="repairStatus" className="form-control" 
-//                                                 value={this.state.repair_status} onChange={this.changeRepairStatusHandler}/>
-//                                         </div>
-
-//                                         <button className="btn btn-success" onClick={this.saveOrUpdateRepairOrder}>Save</button>
-//                                         <button className="btn btn-danger" onClick={this.cancel.bind(this)} style={{marginLeft: "10px"}}>Cancel</button>
-//                                     </form>
-//                                 </div>
-//                             </div>
-//                         </div>
-
-//                    </div>
-//             </div>
-//             )
-//         }
+        <div className="Home-image"></div>
+        <Container className="Site-content">
+          {title}
+          
+          <Form onSubmit={this.handleSubmit}>
+            <FormGroup>
+              <Label for="deviceSpecs">Device Specifications</Label>
+              <Input
+                type="deviceSpecs"
+                name="deviceSpecs"
+                id="deviceSpecs"
+                onChange={this.handleChange}
+                autoComplete="deviceSpecs"
+              />
+            </FormGroup>
+            <FormGroup>
+              <Label for="repairStatus">Repair Status </Label>
+              <Input
+                className="mt-2 ml-2"
+                type="repairStatus"
+                name="repairStatus"
+                id="repairStatus"
+                onChange={this.handleChange}
+              />
+            </FormGroup>
+            <FormGroup>
+              <Label for="client">Client</Label>
+              <select
+                name="client"
+                id="clientId"
+                value={JSON.stringify(this.state.value)}
+                onChange={this.handleChangeClient}
+              >
+                {optionList}
+              </select>
+            </FormGroup>
+            <FormGroup>
+              <Button
+                size="sm"
+                color="primary"
+                type="submit"
+              >
+                Save Repair Order
+              </Button>
+              <Button
+              size="sm"
+            className="btn btn-danger"
+            onClick={this.cancel.bind(this)}
+            style={{ marginLeft: "10px" }}
+          >
+            Cancel
+          </Button>
+            </FormGroup>
+          </Form>
+        </Container>
+      </div>
+    );
+  }
+}
+export default AddRepairOrder;

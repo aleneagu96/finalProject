@@ -1,33 +1,31 @@
 package com.project.repairo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 
 @Entity(name="repairOrder")
 @Table(name= "repairorder")
 public class RepairOrder {
 
+
+    //
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column
     private int repairOrderId;
 
     @Column
-    private String firstName;
-
-    @Column
-    private String lastName;
-
-    @Column
-    private int phoneNumber;
-
-    @Column
-    private String deviceName;
+    private String deviceSpecs;
 
     @Column
     private String repairStatus;
 
-    @Column
-    private String dateOfRepairRequest;
+
+    @ManyToOne
+    @JsonIgnoreProperties("repairOrder")
+
+    private Client client;
 
     public RepairOrder() {}
 
@@ -39,36 +37,12 @@ public class RepairOrder {
         this.repairOrderId = id;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public String getDeviceSpecs() {
+        return deviceSpecs;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public int getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(int phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    public String getDeviceName() {
-        return deviceName;
-    }
-
-    public void setDeviceName(String device) {
-        this.deviceName = device;
+    public void setDeviceSpecs(String device) {
+        this.deviceSpecs = device;
     }
 
     public String getRepairStatus() {
@@ -79,24 +53,21 @@ public class RepairOrder {
         this.repairStatus = status;
     }
 
-    public String getDateOfRepairRequest() {
-        return dateOfRepairRequest;
+    public Client getClient() {
+        return client;
     }
 
-    public void setDateOfRepairRequest(String date) {
-        this.dateOfRepairRequest = date;
+    public void setClient(Client client) {
+        this.client = client;
     }
 
     @Override
     public String toString() {
-        return "Order{" +
-                "id=" + repairOrderId +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", phoneNumber=" + phoneNumber +
-                ", device='" + deviceName + '\'' +
-                ", status='" + repairStatus + '\'' +
-                ", date=" + dateOfRepairRequest +
+        return "RepairOrder{" +
+                "repairOrderId=" + repairOrderId +
+                ", deviceSpecs='" + deviceSpecs + '\'' +
+                ", repairStatus='" + repairStatus + '\'' +
+                ", client=" + client +
                 '}';
     }
 }
