@@ -12,7 +12,7 @@ class AddClient extends Component{
         this.newClient= this.newClient.bind(this);
 
         this.state = {
-            id: null,
+            id: "",
             clientFirstName: "",
             clientLastName: "",
             clientPhoneNumber: ""

@@ -63,9 +63,9 @@ class AddRepairOrder extends Component {
       isLoading: false,
     });
     const responseRepairOrder = await fetch("http://localhost:8090/api/repair_order");
-    const bodyRecipe = await responseRepairOrder.json();
+    const bodyRepairOrder = await responseRepairOrder.json();
     this.setState({
-      repairOrders: bodyRecipe,
+      repairOrders: bodyRepairOrder,
       isLoading: false,
     });
   }

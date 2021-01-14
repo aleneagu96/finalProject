@@ -48,7 +48,7 @@ public class RepairOrderController {
                 .body(result);
     }
 
-    @PutMapping("/update/{id}")
+    @PutMapping("/edit/{id}")
     ResponseEntity<RepairOrder> updateRepairOrder(@RequestBody RepairOrder repairOrder) {
         logger.info("Request to update repair order: {}", repairOrder);
         RepairOrder result = repairOrderRepository.save(repairOrder);

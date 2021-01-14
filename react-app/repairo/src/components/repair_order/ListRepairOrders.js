@@ -6,29 +6,30 @@ class ListRepairOrders extends Component {
 
     constructor(props) {
         super(props);
-  
-       
-
         this.retrieveRepairOrders = this.retrieveRepairOrders.bind(this);
         this.refreshList = this.refreshList.bind(this);
         this.setActiveRepairs = this.setActiveRepairs.bind(this);
         this.removeRepairOrder = this.removeRepairOrder.bind(this);
-        this.update = this.update.bind(this);
+       
 
         this.state = {
             repair_orders: [],
             currentRepair: null,
-            currentIndex: -1
+            currentIndex: -1,
+            id: null,
+            repair_order: {
+              repairOrderId: null,
+              deviceSpecs: "",
+              repairStatus: "",
+              clientId : null,
+            }
         };
     }
 
     componentDidMount() {
         this.retrieveRepairOrders();
     }
-// TODO: implement update method in order to work !!!!!!!!!
-    update() {
-      alert("hello");
-    }
+
     retrieveRepairOrders() {
         ApiService.getAll()
           .then(response => {
@@ -83,8 +84,8 @@ class ListRepairOrders extends Component {
                       onClick={() => this.setActiveRepairs(repair_order, index)}
                       key={index}
                     >
-                      {/* {repair_order.client} */}
-                      {repair_order.deviceSpecs}
+                  
+                      {repair_order.deviceSpecs} {repair_order.repairStatus} {repair_order.clientId}
                     </li>
                   ))}
               </ul>
@@ -95,14 +96,7 @@ class ListRepairOrders extends Component {
               {currentRepair ? (
                 <div>
                   <h4>Repair order</h4>
-                  <div>
-                    <label>
-                      <strong>Client:</strong>
-                    </label>{" "}
-                    {currentRepair.client.clientFirstName} {}
-                    {currentRepair.client.clientLastName} {}
-                    {currentRepair.client.clientPhoneNumber} {}
-                  </div>
+                  
                   <div>
                     <label>
                       <strong>Device specs:</strong>
@@ -115,18 +109,29 @@ class ListRepairOrders extends Component {
                     </label>{" "}
                     {currentRepair.repairStatus}
                   </div>
+                  <div>
+                    <label>
+                      <strong>Client:</strong>
+                    </label>{" "}
+                    {currentRepair.client.clientId} {}
+                    {currentRepair.client.clientFirstName} {}
+                    {currentRepair.client.clientLastName} {}
+                    {currentRepair.client.clientPhoneNumber} {}
+                  </div>
                   <button className="btn btn-danger"
                 onClick={ () => this.removeRepairOrder(currentRepair.repairOrderId)} >
                   
                 Delete
               </button>
-    
-                  <Link to="/update" className="btn btn-primary">Update</Link>
+                
+                    <Link to="/edit" className="btn btn-primary">Update</Link>
+                  
+                  
                 </div>
               ) : (
                 <div>
                   <br />
-                  <p>Please click on a repair order...</p>
+                  
                 </div>
               )}
             </div>
@@ -146,86 +151,4 @@ export default ListRepairOrders
 
 
 
-    //     this.state = {
-    //         repair_orders: []
-    //     }       
-    //     this.addRepairOrder = this.addRepairOrder.bind(this);
-    //     this.updateRepairOrder = this.updateRepairOrder.bind(this);
-    //     this.deleteRepairOrder = this.deleteRepairOrder.bind(this);
-    // }
-
-    
-    // deleteRepairOrder(id) {
-    //     ApiService.deleteRepairOrder(id).then( res => {
-    //            this.setState({repair_orders: this.state.repair_orders.filter(repair_order => repair_order.id !== id)});
-    //        });
-    // }
-
-    // viewRepairOrder(id){
-    //     this.props.history.push(`/view-repair_order/${id}`);
-    // }
-
-    // updateRepairOrder(id) {
-    //     this.props.history.push(`/update/${id}`);
-    // }
-
-    // componentDidMount(){
-    //     ApiService.getRepairOrders("http://localhost:8090/api/repair_order").then((res) => {
-    //         const repair_orders = res.data;
-    //         this.setState({ repair_orders});
-    //     });
-    // }
-
-    
-    // addRepairOrder(){
-    //     this.props.history.push('/newRepairOrder');
-    // }
-
-    // render() {
-    //     return (
-    //         <div>
-    //              <h2 className="text-center">Repair Orders details</h2>
-    //              <div className = "row">
-    //                 <button className="btn btn-primary" onClick={this.addRepairOrder}> Add repair order</button>
-    //              </div>
-    //              <br></br>
-    //              <div className = "row">
-    //                     <table className = "table table-striped table-bordered">
-
-    //                         <thead>
-    //                             <tr>
-    //                                 <th> Client's first name</th>
-    //                                 <th> Client's last name</th>
-    //                                 <th> Client's phone number</th>
-    //                                 <th> Client's device specifications</th>
-    //                                 <th> Repair status</th>
-    //                                 <th> Actions</th>
-    //                             </tr>
-    //                         </thead>
-    //                         <tbody>
-    //                             {
-    //                                 this.state.repair_orders.map(
-    //                                     repair_order => 
-    //                                     <tr key = {repair_order.id}>
-    //                                          <td> {repair_order.client_first_name} </td>   
-    //                                          <td> {repair_order.client_last_name}</td>
-    //                                          <td> {repair_order.client_phone_number}</td>
-    //                                          <td> {repair_order.client_device_specs}</td>
-    //                                          <td> {repair_order.repair_status}</td>
-    //                                          <td>
-    //                                              <button onClick={ () => this.updateRepairOrder(repair_order.id)} className="btn btn-info">Update </button>
-    //                                              <button style={{marginLeft: "10px"}} onClick={ () => this.deleteRepairOrder(repair_order.id)} className="btn btn-danger">Delete </button>
-    //                                              <button style={{marginLeft: "10px"}} onClick={ () => this.viewRepairOrder(repair_order.id)} className="btn btn-info">View </button>
-    //                                          </td>
-    //                                     </tr>
-    //                                 )
-    //                             }
-    //                         </tbody>
-    //                     </table>
-
-    //              </div>
-
-    //         </div>
-    //     );
-    // }
-
+   

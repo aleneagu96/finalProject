@@ -59,6 +59,11 @@ class App extends Component {
                 Update 
               </Link>
             </li>
+            <li className="nav-item">
+              <Link to={`/edit/`} className="nav-link">
+                Edit
+              </Link>
+            </li>
            
             </div>
         </nav>
@@ -67,13 +72,13 @@ class App extends Component {
           <Switch>
             <Route path= "/repair_order" component={ListRepairOrders} />
             <Route path="/newRepairOrder" component={AddRepairOrder} />
-            <Route path="/repair_order/update/:id" component={UpdateRepairOrder} />
             <Route path="/clients" component={ListClient}/>
             <Route path="/newClient" component={AddClient} />
             <Route path="/log_in" component={LogIn}/>
             <Route path="/home" component={Home}/>
             <Route path= "/services" component={Services}/>
             <Route path="/update/" component={UpdateClient}/>
+            <Route path="/edit/" component={UpdateRepairOrder}/>
 
 
           </Switch>
