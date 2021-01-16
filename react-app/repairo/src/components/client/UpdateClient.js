@@ -1,6 +1,10 @@
+
 import React, {Component} from 'react';
+import ClientService from '../../service/ClientService';
 import {Link, withRouter} from 'react-router-dom';
 import {Button, Container, Form, FormGroup, Input, Label} from 'reactstrap';
+import ListClient from './ListClient';
+
 
 class UpdateClient extends Component {
     emptyItem = {
@@ -18,39 +22,63 @@ class UpdateClient extends Component {
         };
 
         this.handleChange = this.handleChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
+        // this.handleSubmit = this.handleSubmit.bind(this);
+        this.updateClient = this.updateClient.bind(this);
     }
 
     async componentDidMount() {
         if( this.props.match.params.clientId !== 'new') {
-            const client = await(await fetch(`/api/clients/${this.props.match.params.clientId}`)).text();
-            this.setState({item: client});
+            const client = await(await (ClientService.update(this.props.match.params.clientId).then(
+                repsonse => {
+                      this.setState({item: client});
+                }
+            )))
+            //  await(await fetch(`/api/clients/${this.props.match.params.clientId}`)).text();
+          
         }
     }
 
     handleChange(event) {
-        const targe = event.target;
-        const value = targe.value;
-        const name = targe.name;
+        const target = event.target;
+        const value = target.value;
+        const name = target.name;
         let item ={...this.state.item};
         item[name] = value;
         this.setState({item});
     }
 
-    async handleSubmit(event) {
-        event.preventDefault();
-        const {item} = this.state;
+    // async handleSubmit(event) {
+    //     event.preventDefault();
+    //     const {item} = this.state;
 
-        await fetch('http://localhost:8090/api/clients/update/' + (item.clientId ? '/' + item.clientId : ''), {
-            method: (item.clientId) ? 'PUT' : 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type' : 'application/json'
-            },
+    //     await ClientService.get((item.clientId ? '/' + item.clientId : ''), {
+    //         method: (item.clientId) ? 'PUT' : 'POST',
+    //         headers: {
+    //             'Accept': 'application/json',
+    //             'Content-Type' : 'application/json'
+    //         },
 
-            body: JSON.stringify(item),
-        });
-            this.props.history.push('/clients');
+    //         body: JSON.stringify(item),
+    //     }).then(response => {
+    //         this.setState({item});
+    //     });
+    //         this.props.history.push('/clients');
+    // }
+
+    updateClient(id, data) {
+        ClientService.update(id, data)
+          .then(response => {
+              this.setState({
+                  clientFirstName: response.data.clientFirstName,
+                  clientLastName: response.data.clientLastName,
+                  clientPhoneNumber: response.data.clientPhoneNumber
+              });
+            console.log(response.data);
+            alert("Client updated")
+            this.refreshList();
+          }).catch(e => {console.log(e)
+          })
+        this.props.history.push(`clients/`)
     }
 
     render() {
@@ -60,7 +88,7 @@ class UpdateClient extends Component {
         return <div>
             <Container>
                 {title}
-                <Form onSubmit={this.handleSubmit}>
+                <Form onSubmit={this.updateClient}>
                 <FormGroup>
                         <Label for="clientId">Client id</Label>
                         <Input type ="text"  name ="clientId" id="clientId" value={item.clientId || ''}
@@ -82,7 +110,10 @@ class UpdateClient extends Component {
                         onChange={this.handleChange} autoComplete="clientPhoneNumber"/>
                     </FormGroup>
                     <FormGroup>
-                    <Button color="primary" type="submit">Save</Button>{' '}
+                    <button className="btn btn-primary"
+                     onClick= { () => this.updateClient(item.clientId, item)}>
+                     Update
+                     </button>
                     <Button color="secondary" type={Link} to="/clients">Cancel</Button>
                     </FormGroup>
                     
@@ -93,3 +124,23 @@ class UpdateClient extends Component {
 }
 
 export default withRouter(UpdateClient);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

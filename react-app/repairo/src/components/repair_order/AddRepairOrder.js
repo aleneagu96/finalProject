@@ -81,7 +81,7 @@ class AddRepairOrder extends Component {
         className="pt-2"
         style={{ display: "flex", justifyContent: "center" }}
       >
-        Add Repair Order
+        Request a repair order
       </h3>
     );
     const { clients, isLoading } = this.state;
@@ -97,12 +97,14 @@ class AddRepairOrder extends Component {
       </option>
     ));
     return (
-      <div className="Site">
+      <div className="repairo">
         
-        <div className="Home-image"></div>
+        <div className="site"></div>
         <Container className="Site-content">
           {title}
-          
+          <div>
+            <p>Please enter the following details !</p>
+            </div>
           <Form onSubmit={this.handleSubmit}>
             <FormGroup>
               <Label for="deviceSpecs">Device Specifications</Label>
@@ -115,7 +117,7 @@ class AddRepairOrder extends Component {
               />
             </FormGroup>
             <FormGroup>
-              <Label for="repairStatus">Repair Status </Label>
+              <Label for="repairStatus"> Defect  </Label>
               <Input
                 className="mt-2 ml-2"
                 type="repairStatus"

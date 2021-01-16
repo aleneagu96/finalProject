@@ -3,89 +3,94 @@ import AddRepairOrder from "./components/repair_order/AddRepairOrder";
 import ListRepairOrders from "./components/repair_order/ListRepairOrders";
 import UpdateRepairOrder from "./components/repair_order/UpdateRepairOrder";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { BrowserRouter as Router, Switch, Route, Link} from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 import ListClient from "../src/components/client/ListClient";
 import AddClient from "../src/components/client/AddClient";
-import LogIn from "../src/components/LogIn.component";
 import Home from "./components/Home";
 import Services from "./components/Services";
 import UpdateClient from "./components/client/UpdateClient";
-
+import Footer  from "./components/Footer";
+import LoginComponent from "./components/security/LoginComponent";
+import ServiceApp from "../../repairo/src/components/security/ServiceApp"
 
 
 class App extends Component {
   render() {
     return (
+      <ServiceApp/>,
       <Router>
-      <div>
-        <nav className="navbar navbar-expand navbar-dark bg-dark">
-          <a href="home" className="navbar-brand">
-            Repairo
+        <div>
+          <nav className="navbar navbar-expand navbar-dark bg-dark">
+            <a href="home" className="navbar-brand">
+              Repairo
           </a>
-                  <div className="navbar-nav mr-auto">
-                  
-            <li className="nav-item">
-                   <Link to={"/services"} className="nav-link">
-                Services 
+            <div className="navbar-nav mr-auto">
+
+              <li className="nav-item">
+                <Link to={"/services"} className="nav-link">
+                  Services
               </Link>
-            </li>
-                  <li className="nav-item">
-                   <Link to={"/repair_order"} className="nav-link">
-                Repair Orders
+              </li>
+              <li className="nav-item">
+                <Link to={"/repair_order"} className="nav-link">
+                  Repair Orders
               </Link>
-            </li>
-            <li className="nav-item">
-              <Link to={"/newRepairOrder"} className="nav-link">
-                Add new repair order
+              </li>
+              <li className="nav-item">
+                <Link to={"/newRepairOrder"} className="nav-link">
+                  Request a repair order
               </Link>
-            </li>
-            <li className="nav-item">
-                   <Link to={"/clients"} className="nav-link">
-                Clients
+              </li>
+              <li className="nav-item">
+                <Link to={"/clients"} className="nav-link">
+                  Clients
               </Link>
-            </li>
-            <li className="nav-item">
-              <Link to={"/newClient"} className="nav-link">
-                Register 
+              </li>
+              <li className="nav-item">
+                <Link to={"/newClient"} className="nav-link">
+                  Register
               </Link>
-            </li>
-            <li className="nav-item">
-                   <Link to={"/log_in"} className="nav-link">
-                Log in
+              </li>
+              <li className="nav-item">
+                <Link to={"/log_in"} className="nav-link">
+                  Log in
               </Link>
-            </li>
-            <li className="nav-item" >
+              </li>
+             <li className="nav-item" >
                    <Link to={`update/`} className="nav-link">
                 Update 
               </Link>
             </li>
-            <li className="nav-item">
+              <li className="nav-item">
               <Link to={`/edit/`} className="nav-link">
                 Edit
               </Link>
-            </li>
-           
+            </li> 
+
             </div>
-        </nav>
+          </nav>
 
-        <div className="container mt-3">
-          <Switch>
-            <Route path= "/repair_order" component={ListRepairOrders} />
-            <Route path="/newRepairOrder" component={AddRepairOrder} />
-            <Route path="/clients" component={ListClient}/>
-            <Route path="/newClient" component={AddClient} />
-            <Route path="/log_in" component={LogIn}/>
-            <Route path="/home" component={Home}/>
-            <Route path= "/services" component={Services}/>
-            <Route path="/update/" component={UpdateClient}/>
-            <Route path="/edit/" component={UpdateRepairOrder}/>
+          <div className="container mt-3">
+            <Switch>
+              <Route path="/repair_order" component={ListRepairOrders} />
+              <Route path="/newRepairOrder" component={AddRepairOrder} />
+              <Route path="/clients" component={ListClient} />
+              <Route path="/newClient" component={AddClient} />
+              <Route path="/log_in" component={LoginComponent} />
+              <Route path="/home" component={Home} />
+              <Route path="/services" component={Services} />
+              <Route path="/update/" component={UpdateClient} />
+              <Route path="/edit/" component={UpdateRepairOrder} />
 
 
-          </Switch>
-          
-        </div>
-      </div>
+            </Switch>
+
+          </div>
+        </div> <div className="Footer">
+              <Footer/>
+            </div> 
       </Router>
+        
     );
   }
 }

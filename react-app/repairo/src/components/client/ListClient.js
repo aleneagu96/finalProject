@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import ClientService from "../../service/ClientService";
-import {Link} from 'react-router-dom';
+import {Link, Route} from 'react-router-dom';
+import UpdateClient from "../client/UpdateClient"
 
 class ListClient extends Component {
 
@@ -31,8 +32,8 @@ class ListClient extends Component {
         this.retrieveClients();
     }
 
-    retrieveClients() {
-        ClientService.getAll()
+     retrieveClients() {
+       ClientService.getAll()
           .then(response => {
             this.setState({
               clients: response.data
@@ -78,6 +79,22 @@ class ListClient extends Component {
           }).catch(e => { console.log(e)
         })
       }
+
+    //   updateClient(id, data) {
+    //     ClientService.update(id, data)
+    //       .then(response => {
+    //           this.setState({
+    //               clientFirstName: response.data.clientFirstName,
+    //               clientLastName: response.data.clientLastName,
+    //               clientPhoneNumber: response.data.clientPhoneNumber
+    //           });
+    //         console.log(response.data);
+    //         alert("Client updated")
+    //         this.refreshList();
+    //       }).catch(e => {console.log(e)
+    //       })
+    //     // this.props.history.push(`clients/`)
+    // }
 
       render() {
         const { clients, currentClient, currentIndex} = this.state;
@@ -144,8 +161,10 @@ class ListClient extends Component {
                   
                 Delete
               </button>
-              <Link to="/update" className="btn btn-primary">Update</Link>
-              
+              <Link to='/update' className="btn btn-primary">Update</Link>
+              <Route path="clients/update/" component={UpdateClient}/>
+             
+             
               
                
                 </div>

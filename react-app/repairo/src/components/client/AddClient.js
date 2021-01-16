@@ -58,6 +58,7 @@ class AddClient extends Component{
             .catch(e => {
                 console.log(e);
             });
+            this.props.history.push('/clients')
     }
 
     newClient() {

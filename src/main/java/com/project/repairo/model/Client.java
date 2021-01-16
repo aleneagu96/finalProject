@@ -9,7 +9,7 @@ import java.util.Set;
 public class Client {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer clientId;
 
     @Column
@@ -59,6 +59,17 @@ public class Client {
     public void setClientPhoneNumber(int clientPhoneNumber) {
         this.clientPhoneNumber = clientPhoneNumber;
     }
+
+
+    public Set<RepairOrder> getRepairOrder() {
+        return repairOrder;
+    }
+
+    public void setRepairOrder(Set<RepairOrder> repairOrder) {
+        this.repairOrder = repairOrder;
+    }
+
+
 
     @Override
     public String toString() {

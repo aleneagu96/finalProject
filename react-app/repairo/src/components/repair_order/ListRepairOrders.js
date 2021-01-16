@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import ApiService from "../../service/ApiService";
-import { Link } from "react-router-dom";
+import { BrowserRouter as Route, Link} from 'react-router-dom';
+import UpdateRepairOrder from "../repair_order/UpdateRepairOrder"
 
 class ListRepairOrders extends Component {
 
@@ -85,7 +86,7 @@ class ListRepairOrders extends Component {
                       key={index}
                     >
                   
-                      {repair_order.deviceSpecs} {repair_order.repairStatus} {repair_order.clientId}
+                     {repair_order.repairOrderId} {repair_order.deviceSpecs}  {repair_order.clientId}
                     </li>
                   ))}
               </ul>
@@ -96,7 +97,12 @@ class ListRepairOrders extends Component {
               {currentRepair ? (
                 <div>
                   <h4>Repair order</h4>
-                  
+                  <div>
+                    <label>
+                      <strong>Repair id:</strong>
+                    </label>{" "}
+                    {currentRepair.repairOrderId}
+                  </div>
                   <div>
                     <label>
                       <strong>Device specs:</strong>
@@ -125,6 +131,7 @@ class ListRepairOrders extends Component {
               </button>
                 
                     <Link to="/edit" className="btn btn-primary">Update</Link>
+                    <Route path="/edit/" component={UpdateRepairOrder}/>
                   
                   
                 </div>

@@ -1,8 +1,9 @@
+
 import http from "../HttpClient";
 
 class ClientService {
     getAll() {
-        return http.get("/clients");
+         return http.get("/clients");
       }
     
       get(id) {
@@ -13,8 +14,8 @@ class ClientService {
         return http.post("/clients/newClient", data);
       }
     
-      update(id) {
-        return http.put(`/clients/update/${id}`);
+      update(id, data) {
+        return http.put(`/clients/update/${id}`, data);
       }
     
       delete(id) {
