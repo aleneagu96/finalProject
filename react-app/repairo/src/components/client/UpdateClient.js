@@ -3,7 +3,7 @@ import React, {Component} from 'react';
 import ClientService from '../../service/ClientService';
 import {Link, withRouter} from 'react-router-dom';
 import {Button, Container, Form, FormGroup, Input, Label} from 'reactstrap';
-import ListClient from './ListClient';
+
 
 
 class UpdateClient extends Component {

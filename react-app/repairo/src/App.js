@@ -6,66 +6,79 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 import ListClient from "../src/components/client/ListClient";
 import AddClient from "../src/components/client/AddClient";
-import Home from "./components/Home";
-import Services from "./components/Services";
+import Home from "./components/home/Home";
+import Services from "./components/home/services/Services";
 import UpdateClient from "./components/client/UpdateClient";
 import Footer  from "./components/Footer";
 import LoginComponent from "./components/security/LoginComponent";
-import ServiceApp from "../../repairo/src/components/security/ServiceApp"
+import AuthenticationService from './service/AuthenticationService';
+import LogoutComponent from "./components/security/LogoutComponent";
+import Contact from "./components/home/contact/Contact";
 
 
 class App extends Component {
   render() {
+    const isUserLoggedIn = AuthenticationService.isUserLoggedIn();
     return (
-      <ServiceApp/>,
+     
       <Router>
+        
         <div>
           <nav className="navbar navbar-expand navbar-dark bg-dark">
-            <a href="home" className="navbar-brand">
+            <a href="/home" className="navbar-brand">
               Repairo
           </a>
             <div className="navbar-nav mr-auto">
-
               <li className="nav-item">
                 <Link to={"/services"} className="nav-link">
                   Services
               </Link>
               </li>
               <li className="nav-item">
+                <Link to={"/contact"} className="nav-link">
+                  Contact
+              </Link>
+              </li>
+              {isUserLoggedIn &&<li className="nav-item">
                 <Link to={"/repair_order"} className="nav-link">
                   Repair Orders
               </Link>
-              </li>
-              <li className="nav-item">
+              </li>}
+              {isUserLoggedIn &&<li className="nav-item">
                 <Link to={"/newRepairOrder"} className="nav-link">
-                  Request a repair order
+                 Add new repair order
               </Link>
-              </li>
-              <li className="nav-item">
+              </li>}
+              {isUserLoggedIn && <li className="nav-item">
                 <Link to={"/clients"} className="nav-link">
                   Clients
               </Link>
-              </li>
-              <li className="nav-item">
+              </li>}
+              {isUserLoggedIn &&<li className="nav-item">
                 <Link to={"/newClient"} className="nav-link">
-                  Register
+                  Add new client
               </Link>
-              </li>
-              <li className="nav-item">
-                <Link to={"/log_in"} className="nav-link">
-                  Log in
-              </Link>
-              </li>
-             <li className="nav-item" >
+              </li>}
+              {isUserLoggedIn &&<li className="nav-item" >
                    <Link to={`update/`} className="nav-link">
                 Update 
               </Link>
-            </li>
-              <li className="nav-item">
+            </li>}
+              {isUserLoggedIn &&<li className="nav-item">
               <Link to={`/edit/`} className="nav-link">
                 Edit
               </Link>
-            </li> 
+    </li> }
+            {!isUserLoggedIn && <li className="nav-item">
+                <Link to={"/log_in"} className="nav-link">
+                  Log in
+              </Link>
+              </li>}
+              {isUserLoggedIn && < li className="nav-item">
+                <Link to={"/logout"} className="nav-link" onClick={AuthenticationService.logout}>
+                  Log out 
+              </Link>
+              </li>}
 
             </div>
           </nav>
@@ -81,8 +94,9 @@ class App extends Component {
               <Route path="/services" component={Services} />
               <Route path="/update/" component={UpdateClient} />
               <Route path="/edit/" component={UpdateRepairOrder} />
-
-
+              <Route path="/contact" component={Contact} />
+              <Route path="/logout" component={LogoutComponent} />
+              
             </Switch>
 
           </div>

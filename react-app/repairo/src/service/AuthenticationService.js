@@ -7,11 +7,9 @@ export const USER_NAME_SESSION_ATTRIBUTE_NAME = 'admin'
 class AuthenticationService {
 
     executeBasicAuthenticationService(username, password) {
-        return axios.get(`${API_URL}/clients`,
+        return axios.get(`${API_URL}/basicauth`,
             { headers: { auth: this.createBasicAuthToken(username, password)}})
-             && 
-            (`${API_URL}/repairOrder`,
-            { headers: { auth: this.createBasicAuthToken(username, password)}})
+           
     }
 
     createBasicAuthToken(username, password) {
@@ -25,7 +23,8 @@ class AuthenticationService {
 
 
     logout() {
-        localStorage.removeItem(USER_NAME_SESSION_ATTRIBUTE_NAME);
+        localStorage.removeItem(USER_NAME_SESSION_ATTRIBUTE_NAME)
+        alert("Loged out");
     }
 
     isUserLoggedIn() {

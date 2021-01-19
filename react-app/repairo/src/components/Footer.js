@@ -27,12 +27,12 @@ const Footer = () => {
             <p>
               <a href="/services">Services</a>
             </p>
-            <p>
+            {/* <p>
               <a href="/newRepairOrder">Request a repair order</a>
             </p>
             <p>
               <a href="/newClient">Register</a>
-            </p>
+            </p> */}
             
           </MDBCol>
           <hr className="w-100 clearfix d-md-none" />

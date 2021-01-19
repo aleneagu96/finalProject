@@ -29,7 +29,7 @@ class LoginComponent extends Component {
     loginClicked() {
         if(this.state.username==='admin' && this.state.password==='admin'){
             AuthenticationService.registerSuccessfulLogin(this.state.username,this.state.password)
-            this.props.history.push(`/clients`)
+            this.props.history.push(`/home`)
             //this.setState({showSuccessMessage:true})
             //this.setState({hasLoginFailed:false})
         }
@@ -42,7 +42,7 @@ class LoginComponent extends Component {
             .executeBasicAuthenticationService(this.state.username, this.state.password)
             .then(() => {
                 AuthenticationService.registerSuccessfulLogin(this.state.username, this.state.password)
-                this.props.history.push(`/clients`)
+                this.props.history.push(`/home`)
             }).catch(() => {
                 this.setState({ showSuccessMessage: false })
                 this.setState({ hasLoginFailed: true })
@@ -54,6 +54,7 @@ class LoginComponent extends Component {
         return (
             <div>
                 <h1>Login</h1>
+                
                 <div className="container">
                     {this.state.hasLoginFailed && <div className="alert alert-warning">Invalid Credentials</div>}
                     {this.state.showSuccessMessage && <div>Login Sucessful</div>}
@@ -70,6 +71,9 @@ class LoginComponent extends Component {
                      </div>
                     <button className="btn btn-success" onClick={this.loginClicked}>Login</button>
                 </div>
+                <br/>
+                <h5>Loging in is only available for our admins.</h5>
+                <h6>Thank you for understanding!</h6>
             </div>
         )
     }

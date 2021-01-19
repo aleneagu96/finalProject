@@ -15,7 +15,7 @@ class ApiService {
       }
     
       update(id, data) {
-        return http.put(`/repair_order/update` +id , data);
+        return http.put(`/repair_order/edit/${id}` , data);
       }
     
       delete(id) {

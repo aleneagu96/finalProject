@@ -117,11 +117,11 @@ class ListClient extends Component {
                   )}
               </ul>
     
-              <button
+              {/* <button
                 className=" btn btn-sm btn-danger"
                 onClick={() => this.removeAllClients()}>
                 Remove All
-              </button>
+              </button> */}
 
 
             </div>

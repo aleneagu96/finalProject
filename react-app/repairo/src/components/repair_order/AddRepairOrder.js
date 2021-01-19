@@ -1,5 +1,8 @@
 import React, { Component } from "react";
 import { Container, Button, Form, Input, Label, FormGroup } from "reactstrap";
+import ClientService from '../../service/ClientService'
+import ApiService from '../../service/ApiService'
+
 
 
 class AddRepairOrder extends Component {
@@ -14,7 +17,6 @@ class AddRepairOrder extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isLoading: true,
       clients: [],
       repairOrders: [],
       client: this.emptyClient,
@@ -39,41 +41,51 @@ class AddRepairOrder extends Component {
     repairOrder[name] = JSON.parse(value);
     this.setState({ repairOrder });
   }
+
+  
   async handleSubmit(event) {
     event.preventDefault();
     const { repairOrder } = this.state;
-    await fetch("http://localhost:8090/api/repair_order/newRepairOrder", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(repairOrder),
-    });
-    console.log(repairOrder);
-    alert("Repair order published")
+    ApiService.create(repairOrder).then(response => 
+      {this.setState({
+        id: response.data.id,
+        deviceSpecs: response.data.deviceSpecs,
+        repairStatus: response.data.repairStatus,
+        client: response.data.client
+      });
+      console.log(response.data);
+    })
+    
+    alert("Repair order created");
+    this.props.history.push('/repair_order')
+
+    // await axios.post("http://localhost:8090/api/repair_order/newRepairOrder")
+    // .then(response =>
+    //       this.setState({
+    //         repairOrder: response.data,
+    //       }));
+    // console.log(repairOrder);
+    // alert("Repair order published")
   }
+
   async componentDidMount() {
-    const responseClient = await fetch(
-      "http://localhost:8090/api/clients"
-    );
-    const bodyCategory = await responseClient.json();
-    this.setState({
-      clients: bodyCategory,
-      isLoading: false,
-    });
-    const responseRepairOrder = await fetch("http://localhost:8090/api/repair_order");
-    const bodyRepairOrder = await responseRepairOrder.json();
-    this.setState({
-      repairOrders: bodyRepairOrder,
-      isLoading: false,
-    });
+  ClientService.getAll()
+         .then(response => {
+           this.setState({
+             clients: response.data
+           });
+         
+           console.log(response.data);
+         })
+         .catch(e => {
+           console.log(e);
+         }); 
   }
   cancel() {
     this.props.history.push("/repair_order");
   }
   save() {
-    this.props.history.push("/repair_order/newRepairOrder");
+    this.props.history.push("/repair_order");
   }
   render() {
     const title = (
@@ -84,10 +96,8 @@ class AddRepairOrder extends Component {
         Request a repair order
       </h3>
     );
-    const { clients, isLoading } = this.state;
-    if (isLoading) {
-      return <div>Loading...</div>;
-    }
+    const {clients} = this.state;
+    
     let optionList = clients.map((client) => (
       <option value={JSON.stringify(client)} id={client.clientId}>
         {" "}

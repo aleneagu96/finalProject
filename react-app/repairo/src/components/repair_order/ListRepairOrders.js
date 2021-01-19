@@ -111,7 +111,7 @@ class ListRepairOrders extends Component {
                   </div>
                   <div>
                     <label>
-                      <strong>Repair status:</strong>
+                      <strong>Defect:</strong>
                     </label>{" "}
                     {currentRepair.repairStatus}
                   </div>
