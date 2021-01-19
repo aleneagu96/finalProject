@@ -1,6 +1,6 @@
 package com.project.repairo.dto;
 
-import javax.persistence.Column;
+
 
 public class ClientDto {
 

@@ -28,6 +28,13 @@ public class Client {
     public Client() {
     }
 
+//    public Client(Integer clientId, String clientFirstName, String clientLastName, int clientPhoneNumber) {
+//        this.clientId = clientId;
+//        this.clientFirstName = clientFirstName;
+//        this.clientLastName = clientLastName;
+//        this.clientPhoneNumber = clientPhoneNumber;
+//    }
+
     public Integer getClientId() {
         return clientId;
     }
