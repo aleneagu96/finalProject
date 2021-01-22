@@ -9,7 +9,7 @@ import AddClient from "../src/components/client/AddClient";
 import Home from "./components/home/Home";
 import Services from "./components/home/services/Services";
 import UpdateClient from "./components/client/UpdateClient";
-import Footer  from "./components/Footer";
+import Footer  from "./components/home/Footer";
 import LoginComponent from "./components/security/LoginComponent";
 import AuthenticationService from './service/AuthenticationService';
 import LogoutComponent from "./components/security/LogoutComponent";
